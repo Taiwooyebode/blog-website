@@ -1,0 +1,44 @@
+# Explanation of Relationships and Comment Display in the Flask Blog App
+
+## 1. Database Models and Relationships
+
+### User Model
+- Represents a user of the blog.
+- Has a one-to-many relationship with BlogPost (a user can author many posts).
+- Has a one-to-many relationship with Comments (a user can write many comments).
+
+### BlogPost Model
+- Represents a blog post.
+- Has a many-to-one relationship with User (each post has one author).
+- Has a one-to-many relationship with Comments (a post can have many comments).
+
+### Comments Model
+- Represents a comment on a blog post.
+- Has a many-to-one relationship with User (each comment is written by one user, called the commentor).
+- Has a many-to-one relationship with BlogPost (each comment belongs to one blog post).
+
+#### SQLAlchemy Relationship Details
+- In `User`:
+  - `posts = relationship("BlogPost", back_populates="author")` links users to their posts.
+  - `comments = relationship("Comments", back_populates="commentor")` links users to their comments.
+- In `BlogPost`:
+  - `author = relationship("User", back_populates="posts")` links a post to its author.
+  - `comments = relationship("Comments", back_populates="post_comments")` links a post to its comments.
+- In `Comments`:
+  - `commentor = relationship("User", back_populates="comments")` links a comment to its author.
+  - `post_comments = relationship("BlogPost", back_populates="comments")` links a comment to its post.
+
+## 2. How Comments Are Displayed in a Post
+
+- When a user visits a post (route `/blogs_info`), the app retrieves the post and its comments from the database.
+- The `show_post` view function fetches the `BlogPost` object by ID, and the template can access `post.comments` to get all comments related to that post.
+- Each comment contains the text, the user who wrote it (`commentor`), and the post it belongs to (`post_comments`).
+- The template (`post.html`) iterates over `post.comments` to display each comment, often showing the comment text and the commentor's name.
+- If a logged-in user submits a comment, a new `Comments` object is created with the current user as `commentor` and the current post as `post_comments`, then saved to the database.
+
+## 3. Summary of Data Flow
+- **User writes a comment** → Form is submitted → New `Comments` object is created and linked to both the user and the post → Saved to database.
+- **User views a post** → Post and its comments are fetched → Comments are displayed by iterating over `post.comments` in the template.
+
+This structure ensures that each comment is always associated with both the user who wrote it and the post it belongs to, allowing for efficient retrieval and display of comments per post.
+
