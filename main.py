@@ -14,9 +14,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Import your forms from the forms.py
 from forms import PostForm, RegisterForm, LoginForm, CommentForm
 from functools import wraps
+import  os
+from dotenv import load_dotenv
+load_dotenv()
 app = Flask(__name__)
 ckeditor = CKEditor(app)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 Bootstrap5(app)
 # TODO: Configure Flask-Login
 login_manager = LoginManager()
@@ -29,7 +32,7 @@ def load_user(user_id):
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("db_url")
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 

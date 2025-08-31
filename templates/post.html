@@ -49,9 +49,9 @@
               <div class="commentText ms-2">
                 <p class="mb-0">{{ comment.text|safe }}</p>
                 <span class="sub-text text-muted d-block" style="font-size: 0.85em; margin-top: 2px;">{{ comment.commentor.name }}</span>
-                #check if the commentor is the current user
+                <!-- check if the commentor is the current user -->
                 {% if comment.commentor.id == commentor %}
-                <a href="{{ url_for('delete_comment',comment_id=comment.id,post_id=post.id) }}" class="btn btn-sm btn-outline-danger ms-1" onclick="return confirm('Delete this comment?');">Delete</a>
+                <a href="{{ url_for('delete_comment',comment_id=comment.id,post_id=post.id) }}" class="btn btn-sm btn-outline-danger ms-1" >✘</a>
                 {% endif %}
               </div>
             </li>
